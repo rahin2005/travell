@@ -1,0 +1,84 @@
+{% extends 'home.html' %}
+
+{% block content %}
+
+
+<h2>دیباگ داده‌ها</h2>
+<p>نام هتل: {{ hotel.name }}</p>
+<p>آدرس: {{ hotel.address }}</p>
+<p>ویژگی‌ها: {{ hotel.features }}</p>
+
+<h3>اتاق‌ها:</h3>
+<ul>
+    {% for room in rooms %}
+        <li>{{ room.name }} - قیمت: {{ room.price }}</li>
+    {% empty %}
+        <p style="color: red;">هیچ اتاقی وجود ندارد!</p>
+    {% endfor %}
+</ul>
+
+<h3>تصاویر هتل:</h3>
+<ul>
+    {% for image in images %}
+        <li><img src="{{ image.image.url }}" width="100"></li>
+    {% empty %}
+        <p style="color: red;">هیچ تصویری ثبت نشده است!</p>
+    {% endfor %}
+</ul>
+
+
+
+
+
+    <h1>{{ hotel.name }}</h1>
+    <p>آدرس: {{ hotel.address }}</p>
+    <p>شماره تماس: {{ hotel.hotel_phone }}</p>
+    <p>ویژگی‌ها: {{ hotel.features }}</p>
+    <p>{{ hotel.description }}</p>
+
+    <h2>اتاق‌های موجود:</h2>
+    {% if rooms %}
+        <ul>
+            {% for room in rooms %}
+                <li>
+                    <h3>{{ room.name }}</h3>
+                    <p>قیمت: {{ room.price }} تومان</p>
+                    <p>ظرفیت: {{ room.capacity }} نفر</p>
+                    {% if room.available %}
+                        <a href="{% url 'reserve_room' room.id %}">رزرو اتاق</a>
+                    {% else %}
+                        <p style="color: red;">این اتاق در حال حاضر قابل رزرو نیست</p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p style="color: red;">هیچ اتاقی برای این هتل ثبت نشده است!</p>
+    {% endif %}
+
+    <h2>تصاویر هتل:</h2>
+    {% if images %}
+        <div>
+            {% for image in images %}
+                <img src="{{ image.image.url }}" alt="تصویر هتل" width="200">
+                <p>{{ image.description }}</p>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>هیچ عکسی برای این هتل ثبت نشده است.</p>
+    {% endif %}
+
+    <!-- اضافه کردن فرم بارگذاری تصاویر -->
+    <h2>آپلود تصاویر جدید</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <ul>
+            {% for form in formset %}
+                <li>{{ form.as_p }}</li>
+            {% endfor %}
+        </ul>
+        <button type="submit">آپلود تصاویر</button>
+    </form>
+
+{% endblock %}

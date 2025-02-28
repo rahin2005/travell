@@ -1,0 +1,172 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trovix - Travel with Ease</title>
+    
+    <!-- لینک‌های CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+
+<!-- لینک Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- استفاده از آیکون Font Awesome -->
+    <i class="fa-solid fa-hotel"></i> <!-- این یک آیکون هتل است -->
+</body>
+</html>
+
+
+    <style>
+        /* تنظیمات کلی */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .content {
+            flex: 1;
+        }
+        
+        /* استایل‌های عمومی */
+        header {
+            text-align: center;
+            padding: 20px;
+            background: #007bff;
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .hotel-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .hotel-card {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #007bff;
+        }
+        .hotel-name {
+            font-size: 1.5em;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .hotel-address, .hotel-phone {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .btn-custom {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .btn-custom:hover {
+            background: #0056b3;
+        }
+
+        /* فوتر */
+        footer {
+            text-align: center;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            width: 100%;
+            position: relative;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Trovix</h1>
+        <p>Welcome to Trovix - Explore the beauty of Iran with ease!</p>
+        <p>زیبایی‌های ایران را به راحتی کشف کنید!</p>
+        <p>بهترین اقامت را تجربه کنید</p>
+    </header>
+
+
+ 
+
+
+
+
+     <!-- فرم جستجو -->
+     <form method="get" action="">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit">جستجو</button>
+      </form>
+
+
+
+    <div class="content">
+        <div class="container">
+            <section class="intro text-center">
+                <h2>Start your journey with us!</h2>
+                <p>می‌خواهید به عنوان کاربر ثبت‌نام کنید یا هتل خود را اضافه کنید؟</p>
+                <div class="buttons mt-3">
+                    <a href="{% url 'register_user' %}" class="btn btn-primary">ثبت‌نام کاربر</a>
+                    <a href="{% url 'register_hotel' %}" class="btn btn-secondary">ثبت هتل</a>
+                </div>
+            </section>
+        </div>
+
+        <div class="container mt-4">
+            <h1 class="text-center">تمام هتل‌ها</h1>
+            <div class="hotel-list">
+                {% for hotel in hotels %}
+                    <div class="hotel-card">
+                        <h2 class="hotel-name">{{ hotel.name }}</h2>
+                        <p class="hotel-address">آدرس: {{ hotel.address }}</p>
+                        <p class="hotel-phone">تلفن: {{ hotel.hotel_phone }}</p>
+                        <p><strong>تعداد ستاره‌ها:</strong> 
+                            <span class="stars">
+                                {% for i in "12345"|make_list %}
+                                    {% if forloop.counter <= hotel.stars %}
+                                        <i class="fas fa-star"></i>  <!-- ستاره پر -->
+                                    {% else %}
+                                        <i class="far fa-star"></i>  <!-- ستاره خالی -->
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                        </p>
+                        <p>Hotel ID: {{ hotel.id}}</p>
+                        <a href="{% url 'hotel_detail' hotel.id %}" class="btn-custom">جزئیات بیشتر</a>
+                    </div>
+                {% empty %}
+                    <p class="text-center text-danger">هیچ جزئیاتی ثبت نشده است.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Trovix. All rights reserved.</p>
+    </footer>
+</body>
+</html>
+
